@@ -2,14 +2,21 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
 const PORT = 5000;
 
 app.use(cookieParser());
 app.use(express.json());
 
+dotenv.config();
+// console.log(process.env.DATABASEURL);
+//===================================
+const DATABASEURL = process.env.DATABASEURL;
+// console.log(DATABASEURL);
+
 mongoose.connect(
-  "mongodb://localhost:27017/mernauth",
+  DATABASEURL,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -18,11 +25,14 @@ mongoose.connect(
     console.log("Connected to DB");
   }
 );
+//---------------------
+const userRouter = require("./routes/User");
+app.use("/user", userRouter);
 //----------------------------------
-const User = require("./models/User");
+// const User = require("./models/User");
 //test
 // const userInput = {
-//   username: "tsv",
+//   username: "zhurka",
 //   password: "password",
 //   role: "admin",
 // };
