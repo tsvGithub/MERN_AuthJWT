@@ -18,7 +18,25 @@ mongoose.connect(
     console.log("Connected to DB");
   }
 );
+//----------------------------------
+const User = require("./models/User");
+//test
+// const userInput = {
+//   username: "tsv",
+//   password: "password",
+//   role: "admin",
+// };
 
+// const user = new User(userInput);
+// user.save((err, document) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log(document);
+// });
+
+//----------------------------------
+//Server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
