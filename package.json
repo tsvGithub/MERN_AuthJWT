@@ -1,0 +1,24 @@
+{
+  "name": "mern_authjwt",
+  "version": "1.0.0",
+  "description": "MERN Auth JWT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsvGithub/MERN_AuthJWT.git"
+  },
+  "keywords": [
+    "MERN",
+    "Auth",
+    "JWT"
+  ],
+  "author": "tsv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsvGithub/MERN_AuthJWT/issues"
+  },
+  "homepage": "https://github.com/tsvGithub/MERN_AuthJWT#readme"
+}
