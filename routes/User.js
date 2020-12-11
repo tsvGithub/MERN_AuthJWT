@@ -68,5 +68,24 @@ userRouter.get("/logout", passport.authenticate("jwt", { session: false }), (req
   res.clearCookie("access_token");
   res.json({ user: { username: "", role: "" }, success: true });
 });
+//=======================================
+//Create TODO for user
+userRouter.post("/todo", passport.authenticate("jwt", { session: false }), (req, res) => {
+  const todo = new Todo(req.body);
+  todo.save((err) => {
+    if (err) {
+      res.status(500).json({ message: { msgBody: "Error", msgError: true } });
+    } else {
+      req.user.todos.push(todo);
+      req.user.save((err) => {
+        if (err) {
+          res.status(500).json({ message: { msgBody: "Error", msgError: true } });
+        } else {
+          res.status(200).json({ message: { msgBody: "Todo creted!", msgError: false } });
+        }
+      });
+    }
+  });
+});
 
 module.exports = userRouter;
