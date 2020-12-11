@@ -6,7 +6,12 @@ const dotenv = require("dotenv");
 
 const PORT = 5000;
 
+//NB!
+//try this:
+//Since version 1.5.0, the cookie-parser middleware no longer needs to be used for this module to work.
+//https://www.npmjs.com/package/express-session
 app.use(cookieParser());
+//------------------------------
 app.use(express.json());
 
 dotenv.config();

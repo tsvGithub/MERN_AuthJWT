@@ -5,6 +5,30 @@ const passportConfig = require("../passport");
 const JWT = require("jsonwebtoken");
 const User = require("../models/User");
 const Todo = require("../models/Todo");
+const { eventNames } = require("../models/User");
+
+const signToken = (userId) => {
+  //jwt.sign(payload, secretOrPrivateKey, [options, callback])
+  return JWT.sign(
+    {
+      //    The "iss" (issuer) claim identifies the principal that issued the
+      //    JWT.  The processing of this claim is generally application specific.
+      //    The "iss" value is a case-sensitive string containing a StringOrURI
+      //    value.  Use of this claim is OPTIONAL
+      iss: "someStirng",
+      // The "sub" (subject) claim identifies the principal that is the
+      //    subject of the JWT.  The claims in a JWT are normally statements
+      //    about the subject.  The subject value MUST either be scoped to be
+      //    locally unique in the context of the issuer or be globally unique.
+      //    The processing of this claim is generally application specific.  The
+      //    "sub" value is a case-sensitive string containing a StringOrURI
+      //    value.  Use of this claim is OPTIONAL.
+      sub: userId,
+    },
+    process.env.secretOrKey,
+    { expiresIn: "1h" }
+  );
+};
 
 //--------------------------
 // SIGN UP
@@ -30,5 +54,12 @@ userRouter.post("/register", (req, res) => {
 });
 //---------------------------
 //LOGIN
-
+userRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+  if (req.isAuthenticated()) {
+    const { _id, username, role } = req.user;
+    const token = signToken(_id);
+    res.cookie("access_token", token, { httpOnly: true, sameSite: true });
+    res.status(200).json({ isAuthenticated: true, user: { username, role } });
+  }
+});
 module.exports = userRouter;
