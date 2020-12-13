@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthService from "../Services/AuthService";
 import { AuthContext } from "../Context/AuthContext";
+
 const Navbar = (props) => {
-  const { isAutenticated, user, setIsAuthenticated, setUser } = useContext(AuthContext);
+  const { isAuthenticated, user, setIsAuthenticated, setUser } = useContext(AuthContext);
 
   const onClickLogoutHandler = () => {
     AuthService.logout().then((data) => {
@@ -42,7 +43,6 @@ const Navbar = (props) => {
             <li className="nav-item nav-link">Admin</li>
           </Link>
         ) : null}
-
         <button type="button" className="btn btn-link nav-item nav-link" onClick={onClickLogoutHandler}>
           LOGOUT
         </button>
@@ -54,8 +54,9 @@ const Navbar = (props) => {
       <Link to="/">
         <div className="navbar-brand">Home</div>
       </Link>
-      <div className="collapse navbar-collapse" id="navbarText">
-        <ul className="navbar-nav mr-auto">{!isAutenticated ? unauthenticatedNavBar() : authenticatedNavBar()}</ul>
+      <div className="navbar" id="navbarText">
+        {/* <div className="collapse navbar-collapse" id="navbarText"> */}
+        <ul className="navbar-nav mr-auto">{!isAuthenticated ? unauthenticatedNavBar() : authenticatedNavBar()}</ul>
       </div>
     </nav>
   );

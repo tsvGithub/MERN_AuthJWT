@@ -1,5 +1,4 @@
 export default {
-  //-------LOGIN ---------------
   login: (user) => {
     console.log(user);
     return fetch("/user/login", {
@@ -9,14 +8,10 @@ export default {
         "Content-Type": "application/json",
       },
     }).then((res) => {
-      if (res.status !== 401) {
-        return res.json().then((data) => data);
-      } else {
-        return { isAuthenticated: false, user: { username: "", role: "" } };
-      }
+      if (res.status !== 401) return res.json().then((data) => data);
+      else return { isAuthenticated: false, user: { username: "", role: "" } };
     });
   },
-  //-------REGISTER -------------------
   register: (user) => {
     console.log(user);
     return fetch("/user/register", {
@@ -29,20 +24,15 @@ export default {
       .then((res) => res.json())
       .then((data) => data);
   },
-  //-------LOGOUT ---------------------
   logout: () => {
     return fetch("/user/logout")
       .then((res) => res.json())
       .then((data) => data);
   },
-  //------Auth--------------
   isAuthenticated: () => {
     return fetch("/user/authenticated").then((res) => {
-      if (res.status !== 401) {
-        return res.json().then((data) => data);
-      } else {
-        return { isAuthenticated: false, user: { username: "", role: "" } };
-      }
+      if (res.status !== 401) return res.json().then((data) => data);
+      else return { isAuthenticated: false, user: { username: "", role: "" } };
     });
   },
 };
