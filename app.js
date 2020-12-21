@@ -31,11 +31,14 @@ mongoose.connect(
   }
 );
 //---------------------
+// 4 Setting up Express Routes
+//require UserRouter from routes/User
 const userRouter = require("./routes/User");
+//endpoint is '/user'
 app.use("/user", userRouter);
 //----------------------------------
 // const User = require("./models/User");
-//test
+// // test;
 // const userInput = {
 //   username: "zhurka",
 //   password: "password",

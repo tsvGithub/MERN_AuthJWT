@@ -1,25 +1,32 @@
 import React, { useState, useRef, useEffect } from "react";
 import Message from "./Message";
+//fetch
 import AuthService from "../Services/AuthService";
 
+// (8)
 const Register = (props) => {
+  // 8a set state
   const [user, setUser] = useState({ username: "", password: "", role: "" });
   const [message, setMessage] = useState(null);
+  //8b useRef creates an istance var because of useing
+  //setTimeout method
   let timerID = useRef(null);
 
+  // 8c cleans up the setTimeout function
   useEffect(() => {
+    //===component did unmout
     return () => {
       clearTimeout(timerID);
     };
   }, []);
-
+  //8e
   const onChangeHandler = (e) => {
     setUser({
       ...user,
       [e.target.name]: e.target.value,
     });
   };
-
+  //8f
   const resetForm = () => {
     setUser({
       username: "",
@@ -27,14 +34,24 @@ const Register = (props) => {
       role: "",
     });
   };
+
+  //8d
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    //fetch ('/register') with user from form
     AuthService.register(user).then((data) => {
+      //pull out {stuff=the message} from response parsed data
       const { message } = data;
+      //update message from useState
       setMessage(message);
+      //clean form
       resetForm();
+      //if there is no error because user successfully
+      //created account => navigate user to Login page
       if (!message.msgError) {
+        //set timer to show to user success message for 2 sec
         timerID = setTimeout(() => {
+          //navigate user to Login page
           props.history.push("/login");
         }, 2000);
       }
