@@ -20,6 +20,7 @@ const Login = (props) => {
   };
   //6e Submit btn
   const onSubmit = (e) => {
+    debugger;
     e.preventDefault();
     //fetch ('/login') with user from form
     AuthService.login(user).then((data) => {
@@ -38,7 +39,13 @@ const Login = (props) => {
         //if isAuthenticated===false =>display error message from server
         setMessage(message);
       }
+      // if (!user) {
+      //   setMessage(message);
+      // }
     });
+    // if (!user) {
+    setMessage(message.msgError);
+    // }
   };
 
   //6c

@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
-const PORT = 5000;
+const PORT = 8080;
 
 //NB!
 //try this:

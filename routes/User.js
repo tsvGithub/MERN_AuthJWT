@@ -117,6 +117,18 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
         user: { username, role },
       }
     );
+  } else {
+    const { username } = req.user;
+    User.findOne({ username }, (err, user) => {
+      if (err) {
+        res.status(500).json({ message: { msgBody: `DB Error ${err}`, msgError: true } });
+      }
+      if (!user) {
+        res
+          .status(400)
+          .json({ message: { msgBody: "Username does't exist, do you want Sign Up instead?", msgError: true } });
+      }
+    });
   }
 });
 //---------------------------------
