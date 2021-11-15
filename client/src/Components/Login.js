@@ -20,7 +20,7 @@ const Login = (props) => {
   };
   //6e Submit btn
   const onSubmit = (e) => {
-    debugger;
+    // debugger;
     e.preventDefault();
     //fetch ('/login') with user from form
     AuthService.login(user).then((data) => {

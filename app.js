@@ -1,35 +1,39 @@
 const express = require("express");
-const app = express();
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
-const PORT = 8080;
+const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 //NB!
 //try this:
 //Since version 1.5.0, the cookie-parser middleware no longer needs to be used for this module to work.
 //https://www.npmjs.com/package/express-session
 app.use(cookieParser());
+
 //------------------------------
-app.use(express.json());
 
 dotenv.config();
 // console.log(process.env.DATABASEURL);
-//===================================
-const DATABASEURL = process.env.DATABASEURL;
-// console.log(DATABASEURL);
 
-mongoose.connect(
-  DATABASEURL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  () => {
-    console.log("Connected to DB");
-  }
-);
+//===================================
+//DB (1)
+const DBURL = process.env.Atlas_URI;
+// const DBURL = process.env.DATABASEURL;
+// console.log(DATABASEURL);
+let db = DBURL === process.env.Atlas_URI ? "DB Atlass" : "Local DB";
+mongoose
+  .connect(DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log(`${db} connected`);
+  })
+  .catch((err) => {
+    console.log(`Can't connect to ${db}`, err.message);
+  });
 //---------------------
 // 4 Setting up Express Routes
 //require UserRouter from routes/User
@@ -54,7 +58,9 @@ app.use("/user", userRouter);
 // });
 
 //----------------------------------
-//Server
+//Server (2)
+const PORT = process.env.PORT || 8080;
+// console.log(PORT);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
