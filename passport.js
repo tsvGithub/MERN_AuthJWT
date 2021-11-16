@@ -65,13 +65,13 @@ passport.use(
       //is primary key of that user.
       User.findById({ _id: payload.sub }, (err, user) => {
         if (err) {
-          //return done func with Err
+          //return 'done' func with Err
           //and user didn't find === false
           return done(err, false);
         }
         //if user exist
         if (user) {
-          //return func done with err===null
+          //return func 'done' with err===null
           //and user object
           //because user is already authenticated
           //we don't need to check password to comapre
@@ -99,11 +99,11 @@ passport.use(
     //check if user exist => find username
     //and cb
     User.findOne({ username }, (err, user) => {
-      //smthg went wrong with DB
+      //smthng went wrong with DB
       if (err) {
         return done(err);
       }
-      //no user exist
+      //no user exists
       if (!user) {
         //invoke done function with no err (null) &
         //did not find a user(false)

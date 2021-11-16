@@ -62,7 +62,7 @@ UserSchema.pre("save", function (next) {
 //version within DB
 //passwod in plain text, call-back
 UserSchema.methods.comparePassword = function (password, cb) {
-  //1)passport from the client he's trying to sign in;
+  //1)password from the client he's trying to sign in;
   //2)hashed password
   //3)cb with error & isMatch(true/false)
   //callback function that returns the true/false result of whether or not the two matched.
