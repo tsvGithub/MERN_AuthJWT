@@ -10,6 +10,7 @@ const User = require("./models/User");
 //A Passport strategy for authorization with a JSON Web Token.
 const JwtStrategy = require("passport-jwt").Strategy;
 
+console.log(process.env.secretOrKey);
 //=============================================
 //3ba
 //When 'user' is authenticated (logged in) we set a cookie on

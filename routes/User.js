@@ -8,7 +8,7 @@ const passportConfig = require("../passport");
 
 const User = require("../models/User");
 const Todo = require("../models/Todo");
-//jwt token
+//sign jwt token/ create JWT token
 const JWT = require("jsonwebtoken");
 
 //-------------------------------------
