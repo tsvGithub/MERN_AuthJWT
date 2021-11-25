@@ -12,7 +12,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
 
 //=============================================
 //3ba
-//When 'user' is authenticated (signed in) we set a cookie on
+//When 'user' is authenticated (logged in) we set a cookie on
 //the client browser and this cookie is the JWT token.
 //'cookieExtractor' extracts JWT token from the request ('req').
 
@@ -21,7 +21,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
 //returns an access token to the application.
 //c)The application uses the access token to access a protected resource.
 const cookieExtractor = (req) => {
-  //extracted token:
+  // extracted token:
   let token = null;
   //if there is req object & req.cookies not empty
   if (req && req.cookies) {

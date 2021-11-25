@@ -60,7 +60,7 @@ UserSchema.pre("save", function (next) {
 //+++passport.js LocalStrategy (3a)
 //compare plain text version from client to hashed
 //version within DB
-//passwod in plain text, call-back
+//passwod in plain text, call-back==='done'in psssport.js (3a) 'user.comparePassword(password, done);'
 UserSchema.methods.comparePassword = function (password, cb) {
   //1)password from the client he's trying to sign in;
   //2)hashed password
