@@ -86,7 +86,7 @@ passport.use(
 //---------------------
 //LOG IN => AUTHENTICATION
 //3a USE PASSPORT
-//***used in  routes->User.js login (4a)***
+//***used in  routes->User.js login (4b)***
 //authenticated local strategy using username and password
 passport.use(
   //LocalStr. with verified cb: username,password & done

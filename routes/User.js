@@ -13,33 +13,34 @@ const JWT = require("jsonwebtoken");
 
 //-------------------------------------
 //(4ba)
-//userId===primary key _id
+//'userId'===DB primary key _id
 const signToken = (userId) => {
   //jwt.sign(payload, secretOrPrivateKey, [options, callback])
   //jwt.sign returns the actual jwt token
   return JWT.sign(
+          //payload: send back all you want except sensitive data:
+      //no credit card info, no social securities etc.!
     {
-      //payload: send back all you want except sensitive data!
-
-      //iss===issuer => who issued (vypustil) this jwt token?
+      //'iss'===issuer => who issued (vypustil) this jwt token?
       //The "iss" value is a case-sensitive string containing a StringOrURI
       //value.  Use of this claim is OPTIONAL
-      iss: "someStirng",
-      //sub===subject => who is this JWT token for?
+            iss: 'tsv',
+      // iss: "someStirng",
+      //'sub'===subject => who is this JWT token for?
       //для кого предназначен этот токен JWT?
       // The "sub" value is a case-sensitive string containing a StringOrURI
       //value.  Use of this claim is OPTIONAL.
-      //userId===primary key _id of the user
+      //'userId'===primary key _id of the 'user'
+      //'userId' is incomming parameter of the function 'signToken'
       sub: userId,
     },
-    //second arg is the key that you want to sign with.
-    //make sure it matches the secretOrKey in
-    //passport.js (3b) secretOrKey: process.env.secretOrKey,
-    //passport will be use this secretOrKey to verify
-    //that this token is legitimate
-    //they have to match
+    //Second arg is the key that you want to sign with.
+    //Make sure it matches the 'secretOrKey' in
+    //passport.js(3b)'secretOrKey:process.env.secretOrKey,'
+    //passport will be use this 'secretOrKey' to verify
+    //that this token is legitimate (valid, matches) 
     process.env.secretOrKey,
-    //option: expires in (1day, 1hour, 5000)
+    //option: expires in (1day, 1hour,(or in milisec) 5000)
     { expiresIn: "1h" }
   );
 };
@@ -76,44 +77,50 @@ userRouter.post("/register", (req, res) => {
 });
 //---------------------------
 // (4b) LOGIN + (3a)'local startegy' +(4ba) create JWT token
-//login route with passport middleware: (strategy we use to authenticate==='local'
-//We created (3a) a local strategy in passport.js -> passport.use(new LocalStrategy(username,password,done)),
-//second -> {set the session to false} so the server is not maintaining the session
+//'/login' route with passport middleware: 
+//strategy we use to authenticate===passport.authenticate("local") authenticates agianst the DB 
+// We created (3a) a 'local strategy' in passport.js ===> 
+//===> passport.use(new LocalStrategy(username, password, done) => User.findOne({username}) => user.comparePassword(password, done))
+//second -> {set the 'session' to false} so the server is not maintaining the session
 userRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
-  //if user is authenticated
-  //isAuthenticated() added by Passport by default
-  //returns boolean (true/false)
+  //if user is authenticated:
+  //isAuthenticated() is added by Passport by default
+  //passport is attaching 'user' object to the req.object.
+  //isAuthenticated() returns boolean (true/false)
   if (req.isAuthenticated()) {
-    //pull out the primary key _id, username, role from
-    //req.user comes from (3a) passport.js
-    //passport.use(new LocalStrategy)
+    //pull out the 'primary key _id', 'username', role from
+    //'req.user' comes from (3a) passport.js
+    //passport.use(new LocalStrategy)=>user.comparePassword(password, done)
+    // and from /models/User.js (2b) COMPARE PASSWORD
+    //->returns cb with null for error&this==='user' object for (4b) req.user
+    // return cb(null, this);
     const { _id, username, role } = req.user;
     //------------------------
-    //user is signed in => we can create JWT token
-    //func signToken with primary key
-    //see above (4ba)
+    //if user is signed in => we can create JWT token:
+    //func 'signToken' with primary key (_id) (4ba)
     const token = signToken(_id);
     //---------------------------------
-    //set the cookie as the access token
+    //set the cookie as the 'access token'
     res.cookie(
       "access_token",
       //pass in jwt token
       token,
-      //SECURITY: JWT token doesn't get stolen
-      //set some options : httpOnly=>makes that on
-      //the client side you cannot touch this cookie
+      //pass next options:
+      //SECURITY: make sure that JWT token doesn't get stolen
+      //'httpOnly'=> makes that on the client side
+      //(client browser) you cannot touch this cookie
       //using JS and prevents against cross-site
-      //scripting attacks
-      //sameSite property is to protect against cross-site
+      //scripting attacks;
+      //'sameSite' property is to protect against cross-site
       //forgery attacks===poddelka, podlog,falj6ivka
       { httpOnly: true, sameSite: true }
     );
-    //sending back response
+    //sending back response:
     res.status(200).json(
       //isAuthenticated: true because the user is successfully logged in
       {
         isAuthenticated: true,
-        //send back user with username and role
+        //send back 'user' with username and role
         user: { username, role },
       }
     );
