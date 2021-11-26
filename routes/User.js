@@ -144,13 +144,15 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
 });
 //---------------------------------
 //LOGOUT (4c)
-//logout route with passport middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
+//logout route with 'passport' middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
 //We created (3b) a JwT strategy in passport.js -> passport.use(new JwtStrategy()),
 //second -> {set the session to false} so the server is not maintaining the session
 userRouter.get("/logout", passport.authenticate("jwt", { session: false }), (req, res) => {
   //clear the cookie (access token) => delete access JWT token
   //need to sign again if need access to site
+    // 'access token' (passport.js 3ba)
   res.clearCookie("access_token");
+  //send response:
   //return empty user object
   res.json({ user: { username: "", role: "" }, success: true });
 });
