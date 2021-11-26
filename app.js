@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 
 const app = express();
+const passport = require("passport");
+app.use(passport.initialize());
+
 
 app.use(cors());
 app.use(express.json());
@@ -35,7 +38,9 @@ mongoose
     console.log(`Can't connect to ${db}`, err.message);
   });
 //---------------------
+
 // 4 Setting up Express Routes
+// app.use(passport.initialize());
 //require UserRouter from routes/User
 const userRouter = require("./routes/User");
 //endpoint is '/user'

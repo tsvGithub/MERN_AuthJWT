@@ -3,6 +3,7 @@ const express = require("express");
 const userRouter = express.Router();
 // use passport configuration from (3)
 const passport = require("passport");
+
 // ???
 const passportConfig = require("../passport");
 
@@ -100,12 +101,13 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
     //func 'signToken' with primary key (_id) (4ba)
     const token = signToken(_id);
     //---------------------------------
-    //set the cookie as the 'access token'
+    //a)set the cookie:
     res.cookie(
+      //'access token' passport.js (3ba)
       "access_token",
-      //pass in jwt token
+      //created JWT token (4ba)
       token,
-      //pass next options:
+      //options:
       //SECURITY: make sure that JWT token doesn't get stolen
       //'httpOnly'=> makes that on the client side
       //(client browser) you cannot touch this cookie
@@ -115,7 +117,7 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
       //forgery attacks===poddelka, podlog,falj6ivka
       { httpOnly: true, sameSite: true }
     );
-    //sending back response:
+    //b)sending back response:
     res.status(200).json(
       //isAuthenticated: true because the user is successfully logged in
       {
@@ -125,11 +127,13 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
       }
     );
   } else {
+    //if not authenticated:
     const { username } = req.user;
     User.findOne({ username }, (err, user) => {
       if (err) {
         res.status(500).json({ message: { msgBody: `DB Error ${err}`, msgError: true } });
       }
+      //no user with that 'username'
       if (!user) {
         res
           .status(400)
