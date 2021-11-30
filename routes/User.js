@@ -79,7 +79,7 @@ userRouter.post("/register", (req, res) => {
 //---------------------------
 // (4b) LOGIN + (3a)'local startegy' +(4ba) create JWT token
 //'/login' route with passport middleware: 
-//strategy we use to authenticate===passport.authenticate("local") authenticates agianst the DB 
+  //strategy to authenticate===passport.authenticate("local")(instead of "jwt" for LOGOUT) authenticates agianst the DB
 // We created (3a) a 'local strategy' in passport.js ===> 
 //===> passport.use(new LocalStrategy(username, password, done) => User.findOne({username}) => user.comparePassword(password, done))
 //second -> {set the 'session' to false} so the server is not maintaining the session
@@ -144,7 +144,8 @@ userRouter.post("/login", passport.authenticate("local", { session: false }), (r
 });
 //---------------------------------
 //LOGOUT (4c)
-//logout route with 'passport' middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
+//logout route with 'passport' middleware: 
+//strategy to authorizate===(instead of "local" for LOGIN) is 'jwt'(to protect endpoints)
 //We created (3b) a JwT strategy in passport.js -> passport.use(new JwtStrategy()),
 //second -> {set the session to false} so the server is not maintaining the session
 userRouter.get("/logout", passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -159,26 +160,24 @@ userRouter.get("/logout", passport.authenticate("jwt", { session: false }), (req
 
 //=======================================
 //Create TODO for user (4d)
-//todo route with passport middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
+//'/todo' route with passport middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
 //We created (3b) a JwT strategy in passport.js -> passport.use(new JwtStrategy()),
 //second -> {set the session to false} so the server is not able maintaining the session
 
-//you have to be logged in (JWT token) in order to create to-do
+//User has to be logged in (JWT token) in order to create to-do
 userRouter.post("/todo", passport.authenticate("jwt", { session: false }), (req, res) => {
-  //create an instance of mongoose model
-  //req.body comes from client
+  //create a new 'todo'=> 'req.body' comes from the client
   const todo = new Todo(req.body);
+  //save new 'todo' to the DB
   todo.save((err) => {
     if (err) {
       res.status(500).json({ message: { msgBody: `DB Error ${err} `, msgError: true } });
     } else {
-      //req.user is added by passport.
-      //Passport attaches the user to the request object
-      //this user is from DB.
-      //in Model->User.js (2) we have [] of todos
-      //adding todo to the array within user
+      //'req.user' is added by passport=> attaches 'user' to the request object;
+      //'user' is from DB => in Model->User.js (2) 'user' has [] of 'todos'
+      //'push' is adding 'todo' to the 'todos' array within 'user'
       req.user.todos.push(todo);
-      //save
+      //save updated 'user' to the DB
       req.user.save((err) => {
         if (err) {
           res.status(500).json({ message: { msgBody: `DB Error ${err} `, msgError: true } });
