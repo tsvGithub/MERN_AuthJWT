@@ -237,15 +237,14 @@ userRouter.get("/admin", passport.authenticate("jwt", { session: false }), (req,
 });
 //----------------------------
 //for FE (4g)
-//if user logged in, save in the state that user is logged in
+//if user logged in, save in the state (React) that user is logged in
 //if user closes browser, the state gets reset
 //this endpoint makes sure that BE & FE is synced in.
 //to keep user still logged in if he was authenticated
 userRouter.get("/authenticated", passport.authenticate("jwt", { session: false }), (req, res) => {
   //pull out username & role from req.user
   const { username, role } = req.user;
-  //send back
-  //user is authenticated & user information
+  //sends back 'user' is authenticated & user information
   res.status(200).json({ isAuthenticated: true, user: { username, role } });
 });
 
