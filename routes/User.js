@@ -160,9 +160,10 @@ userRouter.get("/logout", passport.authenticate("jwt", { session: false }), (req
 
 //=======================================
 //Create TODO for user (4d)
-//'/todo' route with passport middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
+//'/todo' route with passport middleware: 
+//strategy to authorizate===(instead of "local" for LOGIN) is 'jwt'(to protect endpoints)
 //We created (3b) a JwT strategy in passport.js -> passport.use(new JwtStrategy()),
-//second -> {set the session to false} so the server is not able maintaining the session
+//second -> {set the session to false} so the server is not maintaining the session
 
 //User has to be logged in (JWT token) in order to create to-do
 userRouter.post("/todo", passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -188,36 +189,40 @@ userRouter.post("/todo", passport.authenticate("jwt", { session: false }), (req,
     }
   });
 });
+
 //----------------------------
 //Read todo (4e)
-//todos route with passport middleware: (strategy we use to authorization==='jwt'(to protect endpoints)
+//'/todos' route with passport middleware: 
+//strategy to authorizate===(instead of "local" for LOGIN) is 'jwt'(to protect endpoints)
 //We created (3b) a JwT strategy in passport.js -> passport.use(new JwtStrategy()),
-//second -> {set the session to false} so the server is not able maintaining the session
+//second -> {set the session to false} so the server is not maintaining the session
 
-//you have to be logged in (JWT token) in order to read to-dos
+//user has to be logged in (JWT token) in order to read 'todos'
 userRouter.get("/todos", passport.authenticate("jwt", { session: false }), (req, res) => {
   //req.user is added by passport.
   //Passport attaches the user to the request object
   //this user is from DB.
   //_id===primary key
   User.findById({ _id: req.user._id })
-    //when we find the user, the todos array only
-    //have primary keys within it. We need to
-    //populate it with actual data of todos
+    //when we find the 'user', the 'todos' array only
+    //has primary keys of 'todos' within it. We need to
+    //populate it with actual data of 'todos' to get back 'todos':
     .populate("todos")
-    //document===record in MongoDB collection
+    //execute 'populate'
+    //'document'===record in MongoDB collection
     .exec((err, document) => {
       if (err) {
         res.status(500).json({ message: { msgBody: `DB Error ${err} `, msgError: true } });
       } else {
-        //send back todos => document.todos & send back
+        //send back 'todos' => document.todos & send back
         //set authenticated (for frontend) to true to let to know that user is still logged in
         res.status(200).json({ todos: document.todos, authenticated: true });
       }
     });
 });
+
 //---------------------------------
-// check if Adimn panel (role) (4f)
+// check if Adimn role (4f)
 //passport.authenticate("jwt") sends unauthorized request
 //if user don't have JWT token
 userRouter.get("/admin", passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -226,7 +231,7 @@ userRouter.get("/admin", passport.authenticate("jwt", { session: false }), (req,
   if (req.user.role === "admin") {
     res.status(200).json({ message: { msgBody: "Hello, Admin!", msgError: false } });
   } else {
-    //403===not authorized !== admin
+    //403===not authorized !== admin => it is a user!
     res.status(403).json({ message: { msgBody: "You do not have permission to be here!", msgError: true } });
   }
 });
