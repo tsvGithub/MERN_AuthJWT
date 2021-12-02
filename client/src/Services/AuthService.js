@@ -39,7 +39,8 @@ export default {
     });
   },
   //------------------------------------
-  //1b 'user'===username, password, role
+  //1b REGISTER
+  // 'user'===username, password, role
   register: (user) => {
     // console.log(user);
     return fetch("/user/register", {

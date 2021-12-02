@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import AuthService from "../Services/AuthService";
 
-//2
+//2 
 export const AuthContext = createContext();
 
 //it will be used in (3)index.js <AuthProvider>
