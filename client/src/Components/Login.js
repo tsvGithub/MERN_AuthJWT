@@ -10,7 +10,7 @@ import Message from "../Components/Message";
 const Login = (props) => {
   //6a set state:
   const [user, setUser] = useState({ username: "", password: "" });
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState('');
   //6b global context
   const authContext = useContext(AuthContext);
 
@@ -20,7 +20,6 @@ const Login = (props) => {
   };
   //6e Submit btn
   const onSubmit = (e) => {
-    // debugger;
     e.preventDefault();
     //fetch ('/login') with user from form
     AuthService.login(user).then((data) => {
@@ -45,6 +44,7 @@ const Login = (props) => {
     });
     // if (!user) {
     setMessage(message.msgError);
+    console.log(message);
     // }
   };
 
