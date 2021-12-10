@@ -10,7 +10,7 @@ import Message from "../Components/Message";
 const Login = (props) => {
   //6a set state:
   const [user, setUser] = useState({ username: "", password: "" });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   //6b global context
   const authContext = useContext(AuthContext);
 
@@ -21,31 +21,31 @@ const Login = (props) => {
   //6e Submit btn
   const onSubmit = (e) => {
     e.preventDefault();
-    //fetch ('/login') with user from form
-    AuthService.login(user).then((data) => {
-      console.log(data);
-      //pull {stuff} from response parsed data
-      const { isAuthenticated, user, message } = data;
-      //if isAuthenticated===true
-      if (isAuthenticated) {
-        //update global state of user => (updated userr
-        authContext.setUser(user);
-        //update the isAuthenticated state => isAuthenticated(true)
-        authContext.setIsAuthenticated(isAuthenticated);
-        //navigate user to todo page
-        props.history.push("/todos");
-      } else {
-        //if isAuthenticated===false =>display error message from server
-        setMessage(message);
-      }
-      // if (!user) {
-      //   setMessage(message);
-      // }
-    });
-    // if (!user) {
-    setMessage(message.msgError);
-    console.log(message);
-    // }
+    if (user.username && user.password) {
+      //fetch ('/login') with user from form
+      AuthService.login(user).then((data) => {
+        console.log(data);
+        //pull {stuff} from response parsed data
+        const { isAuthenticated, user, message } = data;
+        //if isAuthenticated===true
+        if (isAuthenticated) {
+          //update global state of user => (updated userr
+          authContext.setUser(user);
+          //update the isAuthenticated state => isAuthenticated(true)
+          authContext.setIsAuthenticated(isAuthenticated);
+          //navigate user to todo page
+          props.history.push("/todos");
+        } else {
+          //if isAuthenticated===false =>display error message from server
+          setMessage({ msgBody: "Incorrect credentials, please try again", msgError: true });
+        }
+        // if (!user) {
+        //   setMessage(message);
+        // }
+      });
+    } else {
+      setMessage({ msgBody: "Please enter your username and password!", msgError: true });
+    }
   };
 
   //6c
@@ -56,7 +56,15 @@ const Login = (props) => {
         <label htmlFor="username" className="sr-only">
           Username:{" "}
         </label>
-        <input type="text" name="username" onChange={onChange} className="form-control" placeholder="Enter Username" />
+        <input
+          type="text"
+          name="username"
+          onChange={onChange}
+          className="form-control"
+          placeholder="Enter Username"
+          required
+        />
+
         <label htmlFor="password" className="sr-only">
           Password:{" "}
         </label>
@@ -66,6 +74,7 @@ const Login = (props) => {
           onChange={onChange}
           className="form-control"
           placeholder="Enter Password"
+          required
         />
         <button className="btn btn-lg btn-primary btn-block" type="submit">
           Log in{" "}

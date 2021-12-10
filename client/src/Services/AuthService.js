@@ -1,5 +1,4 @@
-//'AuthService' contains fetch requests through endpoints that
-//created in BE
+//'AuthService' => fetch requests for endpoints in BE
 
 //1
 //Object contains a buch of convenience functions:
